@@ -26,14 +26,17 @@ namespace FunctionAppOrders.Functions
         {
             _logger.LogInformation("Generating and sending message started");
             var messageCount = Environment.GetEnvironmentVariable("MessageCountServiceBus");
-            int count = 2;
+            int count;
             if (string.IsNullOrEmpty(messageCount))
             {
-                _logger.LogInformation("No message generation count set, default count of 2 will be applied");
+                _logger.LogInformation("No message generation count set, message sending is ignored. Please set parameter MessageCountServiceBus with message generation count");
+                return;
             }
-            else
+            int.TryParse(messageCount, out count);
+            if (count == 0)
             {
-               int.TryParse(messageCount, out count);
+                _logger.LogInformation("MessageCountServiceBus value cannot be 0, please set parameter MessageCountServiceBus with value greater then 0");
+                return;
             }
             await _messageSender.SendMessageAsync(count);
         }

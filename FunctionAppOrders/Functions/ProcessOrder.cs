@@ -25,7 +25,7 @@ namespace FunctionAppOrders.Functions
         /// <returns></returns>
 
         [Function("ProcessOrderFunction")]
-        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequest req)
+        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequest req)
         {
             _logger.LogInformation("Started processing request to fetch and process order data");
             try

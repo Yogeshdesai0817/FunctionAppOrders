@@ -25,7 +25,7 @@ namespace ProcessCompanyOrders.Repositories
         }
 
         /// <summary>
-        /// Method returns all sales orders.
+        /// Method returns all sales order based on company id.
         /// </summary>
         /// <param name="companyId"></param>
         /// <returns></returns>

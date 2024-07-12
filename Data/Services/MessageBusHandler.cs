@@ -1,11 +1,7 @@
 ﻿using Azure.Messaging.ServiceBus;
-using Azure.Storage.Blobs;
 using Data.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+
 
 namespace Data.Services
 {
@@ -15,11 +11,14 @@ namespace Data.Services
         private readonly string queueName;
         private readonly ServiceBusClient client;
         private readonly ServiceBusSender sender;
-        public MessageBusHandler()
+        private readonly ILogger<MessageBusHandler> _logger;
+        public MessageBusHandler(ILogger<MessageBusHandler> logger)
         {
+            _logger = logger;
             serviceBusConnectionString = Environment.GetEnvironmentVariable("ServiceBusConnectionString");
             if (string.IsNullOrEmpty(serviceBusConnectionString))
             {
+                _logger.LogError("Empty service bus connection string please check configuration");
                 throw new ArgumentNullException("ServiceBus ConnectionString is empty");
             }
             queueName = Environment.GetEnvironmentVariable("QueueName");
@@ -44,6 +43,7 @@ namespace Data.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error while sending message to service bus {ex}", ex.ToString());
                 return false;
             }
             return true;
